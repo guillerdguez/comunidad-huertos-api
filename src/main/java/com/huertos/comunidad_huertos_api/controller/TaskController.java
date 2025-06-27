@@ -16,49 +16,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.huertos.comunidad_huertos_api.model.Event;
-import com.huertos.comunidad_huertos_api.services.EventService;
+import com.huertos.comunidad_huertos_api.model.Task;
+import com.huertos.comunidad_huertos_api.services.TaskService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/events")
-public class EventController {
+@RequestMapping("/tasks")
+public class TaskController {
 
-	private final EventService service;
+	private final TaskService service;
 
-	public EventController(EventService service) {
+	public TaskController(TaskService service) {
 		this.service = service;
 	}
 
 	@PostMapping
-	public ResponseEntity<Event> create(@Valid @RequestBody Event event) {
-		Event saved = service.save(event);
+	public ResponseEntity<Task> create(@Valid @RequestBody Task Task) {
+		Task saved = service.save(Task);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(saved.getId()).toUri();
 		return ResponseEntity.created(uri).body(saved);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Event>> getAll() {
+	public ResponseEntity<List<Task>> getAll() {
 		return ResponseEntity.ok(service.findAll());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Event> getById(@PathVariable UUID id) {
+	public ResponseEntity<Task> getById(@PathVariable UUID id) {
 		return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Event> update(@PathVariable UUID id, @Valid @RequestBody Event event) {
+	public ResponseEntity<Task> update(@PathVariable UUID id, @Valid @RequestBody Task Task) {
 		return service.findById(id).map(existing -> {
-			event.setId(id);
-			return ResponseEntity.ok(service.save(event));
+			Task.setId(id);
+			return ResponseEntity.ok(service.save(Task));
 		}).orElse(ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable UUID id) {
-		Optional<Event> userOpt = service.findById(id);
+		Optional<Task> userOpt = service.findById(id);
 		if (userOpt.isPresent()) {
 			service.deleteById(id);
 			return ResponseEntity.noContent().build();

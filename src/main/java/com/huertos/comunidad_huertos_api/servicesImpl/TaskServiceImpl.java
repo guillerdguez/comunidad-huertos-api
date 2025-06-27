@@ -4,32 +4,49 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.huertos.comunidad_huertos_api.model.Task;
+import com.huertos.comunidad_huertos_api.repository.TaskRepository;
 import com.huertos.comunidad_huertos_api.services.TaskService;
 
+@Service
+@Transactional
 public class TaskServiceImpl implements TaskService {
 
-	@Override
-	public Task save(Task task) {
+	private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
+	private final TaskRepository repository;
 
-		return null;
+	public TaskServiceImpl(TaskRepository repository) {
+		this.repository = repository;
 	}
 
 	@Override
+	public Task save(Task garden) {
+		log.debug("Guardando parcela: {}", garden);
+		return repository.save(garden);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public List<Task> findAll() {
-
-		return null;
+		log.debug("Recuperando todos los parcelas");
+		return (List<Task>) repository.findAll();
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Task> findById(UUID id) {
-
-		return Optional.empty();
+		log.debug("Buscando parcela por ID: {}", id);
+		return repository.findById(id);
 	}
 
 	@Override
 	public void deleteById(UUID id) {
-
+		log.debug("Eliminando parcela por ID: {}", id);
+		repository.deleteById(id);
 	}
-
 }

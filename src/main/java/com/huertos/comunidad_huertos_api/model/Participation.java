@@ -3,7 +3,11 @@ package com.huertos.comunidad_huertos_api.model;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.huertos.comunidad_huertos_api.model.enums.ParticipationStatus;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,7 +21,8 @@ public class Participation {
 	@Id
 	@GeneratedValue
 	private UUID id;
-
+	@Enumerated(EnumType.STRING)
+	private ParticipationStatus status;
 	// N:1 Event
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "event_id", nullable = false)
@@ -31,11 +36,20 @@ public class Participation {
 	public Participation() {
 	}
 
-	public Participation(UUID id, Event event, User user) {
+	public Participation(UUID id, ParticipationStatus status, Event event, User user) {
 		super();
 		this.id = id;
+		this.status = status;
 		this.event = event;
 		this.user = user;
+	}
+
+	public ParticipationStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ParticipationStatus status) {
+		this.status = status;
 	}
 
 	public UUID getId() {
