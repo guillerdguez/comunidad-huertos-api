@@ -1,8 +1,6 @@
 package com.huertos.comunidad_huertos_api.controller;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -14,11 +12,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.huertos.comunidad_huertos_api.model.User;
+import com.huertos.comunidad_huertos_api.DTO.UserDTO.UserRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.UserDTO.UserResponseDTO;
 import com.huertos.comunidad_huertos_api.services.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -32,38 +31,53 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<User> create(@Valid @RequestBody User User) {
-		User saved = service.save(User);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(saved.getId()).toUri();
-		return ResponseEntity.created(uri).body(saved);
+	@Operation(summary = "Create a new User")
+	public ResponseEntity<UserResponseDTO> create(@RequestBody UserRequestDTO user) {
+
+		UserResponseDTO userResponseDTO = service.createUser(user);
+
+		return ResponseEntity.ok().body(userResponseDTO);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<User>> getAll() {
-		return ResponseEntity.ok(service.findAll());
+	@Operation(summary = "Get all Users")
+	public ResponseEntity<List<UserResponseDTO>> getAll() {
+		List<UserResponseDTO> users = service.findAll();
+
+		return ResponseEntity.ok().body(users);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getById(@PathVariable UUID id) {
-		return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	@Operation(summary = "Get User by ID")
+	public ResponseEntity<UserResponseDTO> getUser(@PathVariable UUID id) {
+		return ResponseEntity.ok().body(service.findById(id));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<User> update(@PathVariable UUID id, @Valid @RequestBody User User) {
-		return service.findById(id).map(existing -> {
-			User.setId(id);
-			return ResponseEntity.ok(service.save(User));
-		}).orElse(ResponseEntity.notFound().build());
+	@Operation(summary = "Update a new User")
+	public ResponseEntity<UserResponseDTO> update(@PathVariable UUID id,
+			@Valid @RequestBody UserRequestDTO userRequest) {
+
+		UserResponseDTO userResponseDTO = service.updateUser(id, userRequest);
+		return ResponseEntity.ok().body(userResponseDTO);
+
 	}
 
+//no puedes borrar si tiene eventos relacionados 
 	@DeleteMapping("/{id}")
+
+	@Operation(summary = "Delete a User")
 	public ResponseEntity<Void> delete(@PathVariable UUID id) {
-		Optional<User> userOpt = service.findById(id);
-		if (userOpt.isPresent()) {
-			service.deleteById(id);
-			return ResponseEntity.noContent().build();
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+		service.deleteById(id);
+		return ResponseEntity.noContent().build();
+
+//		Optional<User> userOpt = service.findById(id);
+//		if (userOpt.isPresent()) {
+//			service.deleteById(id);
+//			return ResponseEntity.noContent().build();
+//			return ResponseEntity.noContent().build();
+//		} else {
+//			return ResponseEntity.notFound().build();
+//		}
 	}
 }

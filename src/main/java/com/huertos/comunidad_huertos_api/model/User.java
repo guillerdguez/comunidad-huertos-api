@@ -35,6 +35,7 @@ public class User {
 	private String email;
 	@Enumerated(EnumType.STRING)
 	private UserAuthority authority;
+	// se tiene que autocrear
 	@Column(nullable = false, updatable = false)
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime joinedAt;

@@ -1,4 +1,4 @@
-package com.huertos.comunidad_huertos_api.model.DTO.EventDTO;
+package com.huertos.comunidad_huertos_api.DTO.EventDTO;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

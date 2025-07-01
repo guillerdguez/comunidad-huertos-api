@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.huertos.comunidad_huertos_api.DTO.GardenDTO.GardenRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.GardenDTO.GardenResponseDTO;
+import com.huertos.comunidad_huertos_api.exception.GardenNotFoundException;
+import com.huertos.comunidad_huertos_api.mapper.GardenMapper;
 import com.huertos.comunidad_huertos_api.model.Garden;
 import com.huertos.comunidad_huertos_api.model.Plot;
 import com.huertos.comunidad_huertos_api.repository.GardenRepository;
@@ -26,23 +30,45 @@ public class GardenServiceImpl implements GardenService {
 	}
 
 	@Override
-	public Garden save(Garden garden) {
-		log.debug("Guardando jardin: {}", garden);
-		return repository.save(garden);
+	public GardenResponseDTO createGarden(GardenRequestDTO garden) {
+
+		Garden newGarden = repository.save(GardenMapper.toModel(garden));
+
+		return GardenMapper.toDTO(newGarden);
+	}
+
+	@Override
+	public GardenResponseDTO updateGarden(UUID id, GardenRequestDTO gardenRequestDTO) {
+		Garden garden = repository.findById(id)
+				.orElseThrow(() -> new GardenNotFoundException("Garden not found with ID: " + id));
+
+//		if (repository.existsByNameAndIdNot(gardenRequestDTO.getName(), id)) {
+//			throw new GardenNameAlreadyExistsException(
+//					"A garden with this name already exists: " + gardenRequestDTO.getName());
+//		}
+
+		garden.setName(gardenRequestDTO.getName());
+		garden.setLocation(gardenRequestDTO.getLocation());
+		garden.setDescription(gardenRequestDTO.getDescription());
+
+		Garden updatedGarden = repository.save(garden);
+		return GardenMapper.toDTO(updatedGarden);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Garden> findAll() {
-		log.debug("Recuperando todos los jardines");
-		return (List<Garden>) repository.findAll();
+	public List<GardenResponseDTO> findAll() {
+		List<Garden> gardens = repository.findAll();
+
+		return gardens.stream().map(GardenMapper::toDTO).toList();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Garden> findById(UUID id) {
-		log.debug("Buscando jardin por ID: {}", id);
-		return repository.findById(id);
+	public GardenResponseDTO findById(UUID id) {
+		Garden garden = repository.findById(id)
+				.orElseThrow(() -> new GardenNotFoundException("Garden not found with ID: " + id));
+		return GardenMapper.toDTO(garden);
 	}
 
 	@Override

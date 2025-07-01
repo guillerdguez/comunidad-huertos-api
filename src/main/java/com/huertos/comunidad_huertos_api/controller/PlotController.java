@@ -1,8 +1,6 @@
 package com.huertos.comunidad_huertos_api.controller;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -14,11 +12,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.huertos.comunidad_huertos_api.model.Plot;
+import com.huertos.comunidad_huertos_api.DTO.PlotDTO.PlotRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.PlotDTO.PlotResponseDTO;
 import com.huertos.comunidad_huertos_api.services.PlotService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -32,38 +31,44 @@ public class PlotController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Plot> create(@Valid @RequestBody Plot event) {
-		Plot saved = service.save(event);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(saved.getId()).toUri();
-		return ResponseEntity.created(uri).body(saved);
+	@Operation(summary = "Create a new Plot")
+	public ResponseEntity<PlotResponseDTO> create(@RequestBody PlotRequestDTO plot) {
+
+		PlotResponseDTO plotResponseDTO = service.createPlot(plot);
+
+		return ResponseEntity.ok().body(plotResponseDTO);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Plot>> getAll() {
-		return ResponseEntity.ok(service.findAll());
+	@Operation(summary = "Get all Plots")
+	public ResponseEntity<List<PlotResponseDTO>> getAll() {
+		List<PlotResponseDTO> plots = service.findAll();
+
+		return ResponseEntity.ok().body(plots);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Plot> getById(@PathVariable UUID id) {
-		return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	@Operation(summary = "Get User by ID")
+	public ResponseEntity<PlotResponseDTO> getPlotById(@PathVariable UUID id) {
+		return ResponseEntity.ok().body(service.findById(id));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Plot> update(@PathVariable UUID id, @Valid @RequestBody Plot event) {
-		return service.findById(id).map(existing -> {
-			event.setId(id);
-			return ResponseEntity.ok(service.save(event));
-		}).orElse(ResponseEntity.notFound().build());
+	@Operation(summary = "Update a new Plot")
+	public ResponseEntity<PlotResponseDTO> update(@PathVariable UUID id,
+			@Valid @RequestBody PlotRequestDTO plotRequest) {
+
+		PlotResponseDTO plotResponseDTO = service.updatePlot(id, plotRequest);
+		return ResponseEntity.ok().body(plotResponseDTO);
+
 	}
 
 	@DeleteMapping("/{id}")
+
+	@Operation(summary = "Delete a Plot")
 	public ResponseEntity<Void> delete(@PathVariable UUID id) {
-		Optional<Plot> userOpt = service.findById(id);
-		if (userOpt.isPresent()) {
-			service.deleteById(id);
-			return ResponseEntity.noContent().build();
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+		service.deleteById(id);
+		return ResponseEntity.noContent().build();
+
 	}
 }

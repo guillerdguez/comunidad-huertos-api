@@ -4,15 +4,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.huertos.comunidad_huertos_api.model.Garden;
+import com.huertos.comunidad_huertos_api.DTO.GardenDTO.GardenRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.GardenDTO.GardenResponseDTO;
 import com.huertos.comunidad_huertos_api.model.Plot;
 
 public interface GardenService {
-	Garden save(Garden garden);
+//	Garden save(Garden garden);
 
-	List<Garden> findAll();
+	GardenResponseDTO createGarden(GardenRequestDTO garden);
 
-	Optional<Garden> findById(UUID id);
+	GardenResponseDTO updateGarden(UUID id, GardenRequestDTO garden);
+
+	List<GardenResponseDTO> findAll();
+
+	GardenResponseDTO findById(UUID id);
 
 	void deleteById(UUID id);
 

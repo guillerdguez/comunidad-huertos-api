@@ -1,41 +1,21 @@
-package com.huertos.comunidad_huertos_api.model.DTO.GardenDTO;
-
-import java.util.UUID;
+package com.huertos.comunidad_huertos_api.DTO.GardenDTO;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-public class UpdateGardenDTO {
-
-	@NotNull(message = "El ID del huerto es obligatorio")
-	private UUID id;
+public class GardenRequestDTO {
 
 	@NotBlank(message = "El nombre es obligatorio")
+	@Size(max = 50, message = "El nombre no puede exceder 50 caracteres")
 	private String name;
 
 	@NotBlank(message = "La ubicación es obligatoria")
+	@Size(max = 50, message = "La ubicación no puede exceder 50 caracteres")
 	private String location;
 
 	@NotBlank(message = "La descripción es obligatoria")
+	@Size(max = 50, message = "La descripción no puede exceder 50 caracteres")
 	private String description;
-
-	public UpdateGardenDTO() {
-	}
-
-	public UpdateGardenDTO(UUID id, String name, String location, String description) {
-		this.id = id;
-		this.name = name;
-		this.location = location;
-		this.description = description;
-	}
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(UUID id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

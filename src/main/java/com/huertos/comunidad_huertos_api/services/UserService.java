@@ -1,18 +1,21 @@
 package com.huertos.comunidad_huertos_api.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import com.huertos.comunidad_huertos_api.model.User;
+import com.huertos.comunidad_huertos_api.DTO.UserDTO.UserRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.UserDTO.UserResponseDTO;
 
 public interface UserService {
 
-	User save(User user);
+//	User save(User user);
+	UserResponseDTO createUser(UserRequestDTO user);
 
-	List<User> findAll();
+	UserResponseDTO updateUser(UUID id, UserRequestDTO user);
 
-	Optional<User> findById(UUID id);
+	List<UserResponseDTO> findAll();
+
+	UserResponseDTO findById(UUID id);
 
 	void deleteById(UUID id);
 }
