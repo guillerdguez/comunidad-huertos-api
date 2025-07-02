@@ -3,39 +3,16 @@ package com.huertos.comunidad_huertos_api.DTO.EventDTO;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+public class EventResponseDTO {
 
-public class UpdateEventDTO {
-
-	@NotNull(message = "El ID del evento es obligatorio")
 	private UUID id;
-
-	@NotBlank(message = "El título es obligatorio")
 	private String title;
-
-	@NotBlank(message = "La descripción es obligatoria")
 	private String description;
-
-	@NotNull(message = "La fecha del evento es obligatoria")
-	@FutureOrPresent(message = "La fecha del evento no puede ser pasada")
 	private LocalDateTime eventDate;
-
-	@NotNull(message = "El ID del huerto es obligatorio")
 	private UUID gardenId;
+	private UUID createdById;
 
-	public UpdateEventDTO() {
-	}
-
-	public UpdateEventDTO(UUID id, String title, String description, LocalDateTime eventDate, UUID gardenId) {
-		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.eventDate = eventDate;
-		this.gardenId = gardenId;
-	}
-
+	// getters & setters
 	public UUID getId() {
 		return id;
 	}
@@ -74,5 +51,13 @@ public class UpdateEventDTO {
 
 	public void setGardenId(UUID gardenId) {
 		this.gardenId = gardenId;
+	}
+
+	public UUID getCreatedById() {
+		return createdById;
+	}
+
+	public void setCreatedById(UUID createdById) {
+		this.createdById = createdById;
 	}
 }
