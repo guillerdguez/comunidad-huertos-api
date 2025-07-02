@@ -1,18 +1,23 @@
 package com.huertos.comunidad_huertos_api.services;
 
+import com.huertos.comunidad_huertos_api.DTO.EventDTO.EventRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.EventDTO.EventResponseDTO;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import com.huertos.comunidad_huertos_api.model.Event;
 
 public interface EventService {
-	Event save(Event event);
 
-	List<Event> findAll();
+    EventResponseDTO createEvent(EventRequestDTO event);
 
-	Optional<Event> findById(UUID id);
+    EventResponseDTO updateEvent(UUID id, EventRequestDTO event);
 
-	void deleteById(UUID id);
+    List<EventResponseDTO> findAll();
+
+    EventResponseDTO findById(UUID id);
+
+    void deleteById(UUID id);
+
 
 }

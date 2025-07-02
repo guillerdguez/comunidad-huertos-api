@@ -1,17 +1,23 @@
 package com.huertos.comunidad_huertos_api.services;
 
+import com.huertos.comunidad_huertos_api.DTO.TaskDTO.TaskRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.TaskDTO.TaskResponseDTO;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import com.huertos.comunidad_huertos_api.model.Task;
 
 public interface TaskService {
-	Task save(Task task);
 
-	List<Task> findAll();
+    TaskResponseDTO createTask(TaskRequestDTO task);
 
-	Optional<Task> findById(UUID id);
+    TaskResponseDTO updateTask(UUID id, TaskRequestDTO task);
 
-	void deleteById(UUID id);
+    List<TaskResponseDTO> findAll();
+
+    TaskResponseDTO findById(UUID id);
+
+    void deleteById(UUID id);
+
+
 }

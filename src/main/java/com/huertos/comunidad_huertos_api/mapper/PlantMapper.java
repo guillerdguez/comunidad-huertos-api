@@ -5,28 +5,34 @@ import com.huertos.comunidad_huertos_api.DTO.PlantDTO.PlantResponseDTO;
 import com.huertos.comunidad_huertos_api.model.Plant;
 import com.huertos.comunidad_huertos_api.model.Plot;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class PlantMapper {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-	public static Plant toEntity(PlantRequestDTO dto) {
-		Plant plant = new Plant();
-		plant.setSpecies(dto.getSpecies());
-		plant.setPlantedAt(dto.getPlantedAt());
-		plant.setHarvestDate(dto.getHarvestDate());
-		plant.setStatus(dto.getStatus());
-		Plot plot = new Plot();
-		plot.setId(dto.getPlotId());
-		plant.setPlot(plot);
-		return plant;
-	}
+    public static PlantResponseDTO toDTO(Plant plant) {
+        PlantResponseDTO dto = new PlantResponseDTO();
+        dto.setId(plant.getId());
+        dto.setSpecies(plant.getSpecies());
+        dto.setPlantedAt(plant.getPlantedAt() != null ? plant.getPlantedAt().format(FORMATTER) : null);
+        dto.setHarvestDate(plant.getHarvestDate() != null ? plant.getHarvestDate().format(FORMATTER) : null);
+        dto.setStatus(plant.getStatus());
+        dto.setPlotId(plant.getPlot() != null ? plant.getPlot().getId() : null);
+        return dto;
+    }
 
-	public static PlantResponseDTO toDto(Plant plant) {
-		PlantResponseDTO dto = new PlantResponseDTO();
-		dto.setId(plant.getId());
-		dto.setSpecies(plant.getSpecies());
-		dto.setPlantedAt(plant.getPlantedAt());
-		dto.setHarvestDate(plant.getHarvestDate());
-		dto.setStatus(plant.getStatus());
-		dto.setPlotId(plant.getPlot().getId());
-		return dto;
-	}
+    public static Plant toModel(PlantRequestDTO dto) {
+        Plant plant = new Plant();
+        plant.setSpecies(dto.getSpecies());
+        LocalDateTime plantedDate = dto.getPlantedAt() != null ? LocalDateTime.parse(dto.getPlantedAt(), FORMATTER) : null;
+        plant.setPlantedAt(plantedDate);
+        LocalDateTime harvestDate = dto.getHarvestDate() != null ? LocalDateTime.parse(dto.getHarvestDate(), FORMATTER) : null;
+        plant.setHarvestDate(harvestDate);
+        plant.setStatus(dto.getStatus());
+        Plot plot = new Plot();
+        plot.setId(dto.getPlotId());
+        plant.setPlot(plot);
+        return plant;
+    }
 }

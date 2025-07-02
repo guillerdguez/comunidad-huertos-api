@@ -1,6 +1,5 @@
 package com.huertos.comunidad_huertos_api.DTO.TaskDTO;
-
-import java.time.LocalDateTime;
+ 
 import java.util.UUID;
 
 import com.huertos.comunidad_huertos_api.model.enums.TaskStatus;
@@ -9,7 +8,7 @@ public class TaskResponseDTO {
 
 	private UUID id;
 	private String description;
-	private LocalDateTime dueDate;
+	private String dueDate;
 	private TaskStatus status;
 	private UUID plotId;
 	private UUID assigneeId;
@@ -30,11 +29,11 @@ public class TaskResponseDTO {
 		this.description = description;
 	}
 
-	public LocalDateTime getDueDate() {
+	public String getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(LocalDateTime dueDate) {
+	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
 

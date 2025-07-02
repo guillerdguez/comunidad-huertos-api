@@ -1,66 +1,64 @@
 package com.huertos.comunidad_huertos_api.DTO.TaskDTO;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import com.huertos.comunidad_huertos_api.model.enums.TaskStatus;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 public class TaskRequestDTO {
 
-	@NotBlank
-	private String description;
+    @NotBlank
+    private String description;
 
-	@NotNull
-	private LocalDateTime dueDate;
+    @NotNull
+    private String dueDate;
 
-	private TaskStatus status;
+    private TaskStatus status;
 
-	@NotNull
-	private UUID plotId;
+    @NotNull
+    private UUID plotId;
 
-	@NotNull
-	private UUID assigneeId;
+    @NotNull
+    private UUID assigneeId;
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public LocalDateTime getDueDate() {
-		return dueDate;
-	}
+    public String getDueDate() {
+        return dueDate;
+    }
 
-	public void setDueDate(LocalDateTime dueDate) {
-		this.dueDate = dueDate;
-	}
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
 
-	public TaskStatus getStatus() {
-		return status;
-	}
+    public TaskStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(TaskStatus status) {
-		this.status = status;
-	}
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
 
-	public UUID getPlotId() {
-		return plotId;
-	}
+    public UUID getPlotId() {
+        return plotId;
+    }
 
-	public void setPlotId(UUID plotId) {
-		this.plotId = plotId;
-	}
+    public void setPlotId(UUID plotId) {
+        this.plotId = plotId;
+    }
 
-	public UUID getAssigneeId() {
-		return assigneeId;
-	}
+    public UUID getAssigneeId() {
+        return assigneeId;
+    }
 
-	public void setAssigneeId(UUID assigneeId) {
-		this.assigneeId = assigneeId;
-	}
+    public void setAssigneeId(UUID assigneeId) {
+        this.assigneeId = assigneeId;
+    }
 }

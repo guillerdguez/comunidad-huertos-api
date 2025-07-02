@@ -1,17 +1,20 @@
 package com.huertos.comunidad_huertos_api.services;
 
+import com.huertos.comunidad_huertos_api.DTO.ParticipationDTO.ParticipationRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.ParticipationDTO.ParticipationResponseDTO;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import com.huertos.comunidad_huertos_api.model.Participation;
-
 public interface ParticipationService {
-	Participation save(Participation participation);
 
-	List<Participation> findAll();
+    ParticipationResponseDTO createParticipation(ParticipationRequestDTO participation);
 
-	Optional<Participation> findById(UUID id);
+    ParticipationResponseDTO updateParticipation(UUID id, ParticipationRequestDTO participation);
 
-	void deleteById(UUID id);
+    List<ParticipationResponseDTO> findAll();
+
+    ParticipationResponseDTO findById(UUID id);
+
+    void deleteById(UUID id);
 }

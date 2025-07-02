@@ -18,7 +18,7 @@ public class EventRequestDTO {
 	private String description;
 
 	@NotNull
-	private LocalDateTime eventDate;
+	private String eventDate;
 
 	@NotNull
 	private UUID gardenId;
@@ -43,11 +43,11 @@ public class EventRequestDTO {
 		this.description = description;
 	}
 
-	public LocalDateTime getEventDate() {
+	public String getEventDate() {
 		return eventDate;
 	}
 
-	public void setEventDate(LocalDateTime eventDate) {
+	public void setEventDate(String eventDate) {
 		this.eventDate = eventDate;
 	}
 

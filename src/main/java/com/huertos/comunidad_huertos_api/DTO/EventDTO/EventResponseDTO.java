@@ -1,6 +1,5 @@
 package com.huertos.comunidad_huertos_api.DTO.EventDTO;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class EventResponseDTO {
@@ -8,7 +7,7 @@ public class EventResponseDTO {
 	private UUID id;
 	private String title;
 	private String description;
-	private LocalDateTime eventDate;
+	private String eventDate;
 	private UUID gardenId;
 	private UUID createdById;
 
@@ -37,11 +36,11 @@ public class EventResponseDTO {
 		this.description = description;
 	}
 
-	public LocalDateTime getEventDate() {
+	public String getEventDate() {
 		return eventDate;
 	}
 
-	public void setEventDate(LocalDateTime eventDate) {
+	public void setEventDate(String eventDate) {
 		this.eventDate = eventDate;
 	}
 

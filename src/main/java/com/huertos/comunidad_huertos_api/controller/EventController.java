@@ -1,69 +1,65 @@
 package com.huertos.comunidad_huertos_api.controller;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.huertos.comunidad_huertos_api.model.Event;
+import com.huertos.comunidad_huertos_api.DTO.EventDTO.EventRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.EventDTO.EventResponseDTO;
 import com.huertos.comunidad_huertos_api.services.EventService;
-
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/events")
 public class EventController {
 
-	private final EventService service;
+    private final EventService service;
 
-	public EventController(EventService service) {
-		this.service = service;
-	}
+    public EventController(EventService service) {
+        this.service = service;
+    }
 
-	@PostMapping
-	public ResponseEntity<Event> create(@Valid @RequestBody Event event) {
-		Event saved = service.save(event);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(saved.getId()).toUri();
-		return ResponseEntity.created(uri).body(saved);
-	}
+    @PostMapping
+    @Operation(summary = "Create a new Event")
+    public ResponseEntity<EventResponseDTO> create(@RequestBody EventRequestDTO event) {
 
-	@GetMapping
-	public ResponseEntity<List<Event>> getAll() {
-		return ResponseEntity.ok(service.findAll());
-	}
+        EventResponseDTO eventResponseDTO = service.createEvent(event);
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Event> getById(@PathVariable UUID id) {
-		return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-	}
+        return ResponseEntity.ok().body(eventResponseDTO);
+    }
 
-	@PutMapping("/{id}")
-	public ResponseEntity<Event> update(@PathVariable UUID id, @Valid @RequestBody Event event) {
-		return service.findById(id).map(existing -> {
-			event.setId(id);
-			return ResponseEntity.ok(service.save(event));
-		}).orElse(ResponseEntity.notFound().build());
-	}
+    @GetMapping
+    @Operation(summary = "Get all Events")
+    public ResponseEntity<List<EventResponseDTO>> getAll() {
+        List<EventResponseDTO> events = service.findAll();
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable UUID id) {
-		Optional<Event> userOpt = service.findById(id);
-		if (userOpt.isPresent()) {
-			service.deleteById(id);
-			return ResponseEntity.noContent().build();
-		} else {
-			return ResponseEntity.notFound().build();
-		}
-	}
+        return ResponseEntity.ok().body(events);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get Event by ID")
+    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable UUID id) {
+        return ResponseEntity.ok().body(service.findById(id));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update a new Event")
+    public ResponseEntity<EventResponseDTO> update(@PathVariable UUID id,
+                                                   @Valid @RequestBody EventRequestDTO eventRequest) {
+
+        EventResponseDTO eventResponseDTO = service.updateEvent(id, eventRequest);
+        return ResponseEntity.ok().body(eventResponseDTO);
+
+    }
+
+    @DeleteMapping("/{id}")
+
+    @Operation(summary = "Delete a Event")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
+
+    }
 }

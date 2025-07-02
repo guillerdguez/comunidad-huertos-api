@@ -1,10 +1,10 @@
 package com.huertos.comunidad_huertos_api.services;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.huertos.comunidad_huertos_api.DTO.UserDTO.UserRequestDTO;
 import com.huertos.comunidad_huertos_api.DTO.UserDTO.UserResponseDTO;
+
+import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
 

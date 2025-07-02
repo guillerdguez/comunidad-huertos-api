@@ -1,52 +1,89 @@
 package com.huertos.comunidad_huertos_api.servicesImpl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import com.huertos.comunidad_huertos_api.DTO.EventDTO.EventRequestDTO;
+import com.huertos.comunidad_huertos_api.DTO.EventDTO.EventResponseDTO;
+import com.huertos.comunidad_huertos_api.exception.EventNotFoundException;
+import com.huertos.comunidad_huertos_api.exception.GardenNotFoundException;
+import com.huertos.comunidad_huertos_api.mapper.EventMapper;
+import com.huertos.comunidad_huertos_api.model.Event;
+import com.huertos.comunidad_huertos_api.model.Garden;
+import com.huertos.comunidad_huertos_api.repository.EventRepository;
+import com.huertos.comunidad_huertos_api.repository.GardenRepository;
+import com.huertos.comunidad_huertos_api.services.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; 
+import org.springframework.transaction.annotation.Transactional;
 
-import com.huertos.comunidad_huertos_api.model.Event;
-import com.huertos.comunidad_huertos_api.repository.EventRepository;
-import com.huertos.comunidad_huertos_api.services.EventService;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class EventServiceImpl implements EventService {
 
-	private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
-	private final EventRepository repository;
+    private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
+    private final EventRepository repository;
+    private final GardenRepository gardenRepository;
 
-	public EventServiceImpl(EventRepository repository) {
-		this.repository = repository;
-	}
+    public EventServiceImpl(EventRepository repository,
+                            GardenRepository gardenRepository) {
+        this.repository = repository;
+        this.gardenRepository = gardenRepository;
+    }
 
-	@Override
-	public Event save(Event event) {
-		log.debug("Guardando evento: {}", event);
-		return repository.save(event);
-	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<Event> findAll() {
-		log.debug("Recuperando todos los eventos");
-		return (List<Event>) repository.findAll();
-	}
+    @Override
+    public EventResponseDTO createEvent(EventRequestDTO event) {
 
-	@Override
-	@Transactional(readOnly = true)
-	public Optional<Event> findById(UUID id) {
-		log.debug("Buscando evento por ID: {}", id);
-		return repository.findById(id);
-	}
+        log.debug("Guardando event: {}", event);
 
-	@Override
-	public void deleteById(UUID id) {
-		log.debug("Eliminando evento por ID: {}", id);
-		repository.deleteById(id);
-	}
+        Event newEvent = repository.save(EventMapper.toModel(event));
+        return EventMapper.toDTO(newEvent);
+    }
+
+    @Override
+    public EventResponseDTO updateEvent(UUID id, EventRequestDTO eventRequest) {
+        Event event = repository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + id));
+
+        event.setTitle(eventRequest.getTitle());
+        event.setDescription(eventRequest.getDescription());
+        event.setEventDate(
+                LocalDateTime.parse(eventRequest.getEventDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+        Garden garden = gardenRepository.findById(eventRequest.getGardenId())
+                .orElseThrow(() -> new GardenNotFoundException(
+                        "Garden not found with ID: " + eventRequest.getGardenId()));
+        event.setGarden(garden);
+        Event updatedEvent = repository.save(event);
+
+        return EventMapper.toDTO(updatedEvent);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EventResponseDTO> findAll() {
+        log.debug("Recuperando todos los events");
+
+        List<Event> events = (List<Event>) repository.findAll();
+
+        return events.stream().map(EventMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EventResponseDTO findById(UUID id) {
+        Event event = repository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + id));
+        return EventMapper.toDTO(event);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        log.debug("Eliminando event por ID: {}", id);
+        repository.deleteById(id);
+    }
 }
