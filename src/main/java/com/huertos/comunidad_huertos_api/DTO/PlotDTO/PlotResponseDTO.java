@@ -1,53 +1,69 @@
-
 package com.huertos.comunidad_huertos_api.DTO.PlotDTO;
 
 import java.util.UUID;
 
 public class PlotResponseDTO {
 
-	private UUID id;
-	private Long sizeM2;
-	private String soilType;
-	private Boolean isActive;
-	private UUID gardenId;
+    private UUID id;
+    private Long sizeM2;
+    private String soilType;
+    private Boolean isActive;
+    private UUID gardenId;
+    private UUID ownerId;
 
-	public UUID getGardenId() {
-		return gardenId;
-	}
+    public Boolean getActive() {
+        return isActive;
+    }
 
-	public void setGardenId(UUID gardenId) {
-		this.gardenId = gardenId;
-	}
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
 
-	public UUID getId() {
-		return id;
-	}
+    public UUID getOwnerId() {
+        return ownerId;
+    }
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    public void setOwnerId(UUID ownerId) {
+        this.ownerId = ownerId;
+    }
 
-	public Long getSizeM2() {
-		return sizeM2;
-	}
+    public UUID getGardenId() {
+        return gardenId;
+    }
 
-	public void setSizeM2(Long sizeM2) {
-		this.sizeM2 = sizeM2;
-	}
+    public void setGardenId(UUID gardenId) {
+        this.gardenId = gardenId;
+    }
 
-	public String getSoilType() {
-		return soilType;
-	}
+    public UUID getId() {
+        return id;
+    }
 
-	public void setSoilType(String soilType) {
-		this.soilType = soilType;
-	}
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	public Boolean getIsActive() {
-		return isActive;
-	}
+    public Long getSizeM2() {
+        return sizeM2;
+    }
 
-	public void setIsActive(Boolean active) {
-		isActive = active;
-	}
+    public void setSizeM2(Long sizeM2) {
+        this.sizeM2 = sizeM2;
+    }
+
+    public String getSoilType() {
+        return soilType;
+    }
+
+    public void setSoilType(String soilType) {
+        this.soilType = soilType;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean active) {
+        isActive = active;
+    }
 }

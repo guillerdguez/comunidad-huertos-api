@@ -18,6 +18,10 @@ public interface TaskService {
     TaskResponseDTO findById(UUID id);
 
     void deleteById(UUID id);
+    //extra
 
+    List<TaskResponseDTO> getPendingTasksByUser(UUID userId);
+
+    List<TaskResponseDTO> getOverdue();
 
 }

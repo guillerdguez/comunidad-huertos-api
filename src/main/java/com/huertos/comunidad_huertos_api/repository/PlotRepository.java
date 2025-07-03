@@ -10,4 +10,11 @@ import java.util.UUID;
 @Repository
 public interface PlotRepository extends JpaRepository<Plot, UUID> {
     List<Plot> findByGardenId(UUID gardenId);
+
+    List<Plot> findByOwnerIsNull();
+
+    List<Plot> findByGardenIdAndOwnerIsNull(UUID gardenId);
+
+    List<Plot> findByActiveTrueAndSoilType(String soilType);
+
 }

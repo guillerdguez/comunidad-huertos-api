@@ -8,6 +8,7 @@ import com.huertos.comunidad_huertos_api.mapper.TaskMapper;
 import com.huertos.comunidad_huertos_api.model.Plot;
 import com.huertos.comunidad_huertos_api.model.Task;
 import com.huertos.comunidad_huertos_api.model.User;
+import com.huertos.comunidad_huertos_api.model.enums.TaskStatus;
 import com.huertos.comunidad_huertos_api.repository.PlotRepository;
 import com.huertos.comunidad_huertos_api.repository.TaskRepository;
 import com.huertos.comunidad_huertos_api.repository.UserRepository;
@@ -79,7 +80,7 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponseDTO> findAll() {
         log.debug("Recuperando todos los tasks");
 
-        List<Task> tasks = (List<Task>) repository.findAll();
+        List<Task> tasks = repository.findAll();
 
         return tasks.stream().map(TaskMapper::toDTO).collect(Collectors.toList());
     }
@@ -97,4 +98,22 @@ public class TaskServiceImpl implements TaskService {
         log.debug("Eliminando task por ID: {}", id);
         repository.deleteById(id);
     }
+
+    @Override
+    public List<TaskResponseDTO> getPendingTasksByUser(UUID userId) {
+        List<Task> tasks = repository.findByAssignee_IdAndStatus(userId, TaskStatus.PENDING);
+
+        return tasks.stream().map(TaskMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskResponseDTO> getOverdue() {
+        List<Task> tasks = repository
+                .findByDueDateBeforeAndStatus(LocalDateTime.now(), TaskStatus.PENDING);
+        return tasks.stream()
+                .map(TaskMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
 }

@@ -55,11 +55,28 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
-
     @Operation(summary = "Delete a Task")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
 
     }
+
+    //extras
+    @GetMapping("/user/{userId}/pending")
+    @Operation(summary = "Get Pending tasks by user")
+    public ResponseEntity<List<TaskResponseDTO>> getPendingTasksByUser(@PathVariable UUID userId) {
+        List<TaskResponseDTO> tasks = service.getPendingTasksByUser(userId);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/tasks/overdue")
+    @Operation(summary = "Get Pending and OverDue")
+    public ResponseEntity<List<TaskResponseDTO>> getOverDue() {
+        List<TaskResponseDTO> tasks = service.getOverdue();
+        return ResponseEntity.ok(tasks);
+
+
+    }
+
 }

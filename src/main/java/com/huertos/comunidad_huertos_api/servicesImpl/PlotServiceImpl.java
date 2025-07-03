@@ -87,8 +87,31 @@ public class PlotServiceImpl implements PlotService {
         Garden garden = gardenRepo.findById(gardenId)
                 .orElseThrow(() -> new GardenNotFoundException("No existe jardín con ID: " + gardenId));
 
-        List<Plot> plots = (List<Plot>) repository.findByGardenId(gardenId);
+        List<Plot> plots = repository.findByGardenId(gardenId);
 
+
+        return plots.stream().map(PlotMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PlotResponseDTO> findByOwnerIsNull() {
+        List<Plot> plots = repository.findByOwnerIsNull();
+
+        return plots.stream().map(PlotMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PlotResponseDTO> findByGardenIdAndOwnerIsNull(UUID gardenId) {
+        List<Plot> plots = repository.findByGardenIdAndOwnerIsNull(gardenId);
+
+        return plots.stream().map(PlotMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PlotResponseDTO> findByActiveAndSoilType(String soilType) {
+        List<Plot> plots = repository.findByActiveTrueAndSoilType(soilType);
 
         return plots.stream().map(PlotMapper::toDTO).collect(Collectors.toList());
     }

@@ -8,14 +8,18 @@ import java.util.UUID;
 
 public interface UserService {
 
-//	User save(User user);
-	UserResponseDTO createUser(UserRequestDTO user);
+    //	User save(User user);
+    UserResponseDTO createUser(UserRequestDTO user);
 
-	UserResponseDTO updateUser(UUID id, UserRequestDTO user);
+    UserResponseDTO updateUser(UUID id, UserRequestDTO user);
 
-	List<UserResponseDTO> findAll();
+    List<UserResponseDTO> findAll();
 
-	UserResponseDTO findById(UUID id);
+    UserResponseDTO findById(UUID id);
 
-	void deleteById(UUID id);
+    void deleteById(UUID id);
+
+    //extras
+    List<UserResponseDTO> findDistinctByPlotsActiveFalse();
+
 }

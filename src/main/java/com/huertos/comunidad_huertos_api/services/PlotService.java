@@ -20,4 +20,10 @@ public interface PlotService {
 
     //extra
     List<PlotResponseDTO> findByGardenId(UUID gardenId);
+
+    List<PlotResponseDTO> findByOwnerIsNull();
+
+    List<PlotResponseDTO> findByGardenIdAndOwnerIsNull(UUID gardenId);
+
+    List<PlotResponseDTO> findByActiveAndSoilType(String soilType);
 }
