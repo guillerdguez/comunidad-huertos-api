@@ -5,9 +5,12 @@ import com.huertos.comunidad_huertos_api.DTO.PlotDTO.PlotResponseDTO;
 import com.huertos.comunidad_huertos_api.services.PlotService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,21 +24,40 @@ public class PlotController {
         this.service = service;
     }
 
+    //    @PostMapping
+    //     @Operation(summary = "Create a new Plot")
+    //     public ResponseEntity<PlotResponseDTO> create(@RequestBody PlotRequestDTO plot) {
+
+    //     PlotResponseDTO plotResponseDTO = service.createPlot(plot);
+
+    //     return ResponseEntity.ok().body(plotResponseDTO);
+    //  }
     @PostMapping
     @Operation(summary = "Create a new Plot")
-    public ResponseEntity<PlotResponseDTO> create(@RequestBody PlotRequestDTO plot) {
+    public ResponseEntity<PlotResponseDTO> create(
+            @Valid @RequestBody PlotRequestDTO plotRequest) {
 
-        PlotResponseDTO plotResponseDTO = service.createPlot(plot);
+        // 1. Crear el recurso y obtener el DTO con el ID generado
+        PlotResponseDTO created = service.createPlot(plotRequest);
 
-        return ResponseEntity.ok().body(plotResponseDTO);
+        // 2. Construir la URI del nuevo recurso: /plots/{id}
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()                  // base /plots :contentReference[oaicite:2]{index=2}
+                .path("/{id}")                         // añade /{id} :contentReference[oaicite:3]{index=3}
+                .buildAndExpand(created.getId())       // sustituye {id} por el valor real :contentReference[oaicite:4]{index=4}
+                .toUri();                              // convierte a URI :contentReference[oaicite:5]{index=5}
+
+        // 3. Devolver 201 Created con Location y cuerpo
+        return ResponseEntity
+                .created(location)                     // status 201 + header Location :contentReference[oaicite:6]{index=6}
+                .body(created);
     }
 
     @GetMapping
     @Operation(summary = "Get all Plots")
-    public ResponseEntity<List<PlotResponseDTO>> getAll() {
-        List<PlotResponseDTO> plots = service.findAll();
-
-        return ResponseEntity.ok().body(plots);
+    @ResponseStatus(HttpStatus.OK)
+    public List<PlotResponseDTO> getAll() {
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
@@ -87,15 +109,6 @@ public class PlotController {
 
         return ResponseEntity.ok().body(plots);
     }
-
-   /* @Operation(summary = "Get active plots filtered by soil type")
-    @GetMapping("/garden/active/soilType")
-    public ResponseEntity<List<PlotResponseDTO>> getActiveAndSoilType(
-            @RequestParam("soilType") String soilType) {
-
-        List<PlotResponseDTO> plots = service.findByActiveAndSoilType(soilType);
-        return ResponseEntity.ok(plots);
-    } */
 
     @Operation(summary = "Get active plots by soil type (path variable)")
     @GetMapping("/garden/active/soilType/{soilType}")
